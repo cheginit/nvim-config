@@ -48,7 +48,7 @@ Plug 'Shougo/neco-vim', { 'for': 'vim' }
 Plug 'davidhalter/jedi-vim', { 'for': 'python' }
 
 " Python syntax highlighting and more
-if g:is_mac || g:is_win
+if g:is_mac || g:is_win || g:is_linux
   Plug 'numirias/semshi', { 'do': ':UpdateRemotePlugins' }
 endif
 
@@ -94,7 +94,8 @@ endif
 
 "{{ UI: Color, theme etc.
 " A list of colorscheme plugin you may want to try. Find what suits you.
-Plug 'lifepillar/vim-gruvbox8'
+" Plug 'lifepillar/vim-gruvbox8'
+Plug 'ayu-theme/ayu-vim'
 Plug 'srcery-colors/srcery-vim'
 " Plug 'sjl/badwolf'
 " Plug 'ajmwagar/vim-deus'
@@ -120,7 +121,7 @@ Plug 'itchyny/vim-highlighturl'
 
 " For Windows and Mac, we can open an URL in the browser. For Linux, it may
 " not be possible since we maybe in a server which disables GUI.
-if g:is_win || g:is_mac
+if g:is_win || g:is_mac || g:is_linux
   " open URL in browser
   Plug 'tyru/open-browser.vim'
 endif
@@ -217,7 +218,7 @@ Plug 'godlygeek/tabular', {'on': 'Tabularize'}
 Plug 'elzr/vim-json', { 'for': ['json', 'markdown'] }
 
 " Markdown previewing (only for Mac and Windows)
-if g:is_win || g:is_mac
+if g:is_win || g:is_mac || g:is_linux
   Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug'] }
 endif
 
@@ -225,7 +226,7 @@ endif
 " Plug 'https://gitlab.com/gi1242/vim-emoji-ab'
 Plug 'fszymanski/deoplete-emoji', {'for': 'markdown'}
 
-if g:is_mac
+if g:is_mac || g:is_linux
   Plug 'rhysd/vim-grammarous'
 endif
 
@@ -246,7 +247,7 @@ Plug 'michaeljsmith/vim-indent-object'
 
 "{{ LaTeX editting and previewing plugin
 " Only use these plugin on Windows and Mac and when LaTeX is installed
-if ( g:is_win || g:is_mac ) && executable('latex')
+if ( g:is_win || g:is_mac || g:is_linux ) && executable('latex')
   " vimtex use autoload feature of Vim, so it is not necessary to use `for`
   " keyword of vim-plug to try to lazy-load it,
   " see https://github.com/junegunn/vim-plug/issues/785
@@ -291,12 +292,12 @@ Plug 'skywind3000/asyncrun.vim'
 Plug 'cespare/vim-toml'
 
 " Edit text area in browser using nvim
-if g:is_mac || g:is_win
+if g:is_mac || g:is_win || g:is_linux
   Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
 endif
 
 " Debugger plugin
-if g:is_mac || g:is_linux
+if g:is_mac || g:is_linux || g:is_linux
   Plug 'sakhnik/nvim-gdb', { 'do': ':!./install.sh \| UpdateRemotePlugins' }
 endif
 call plug#end()
@@ -471,7 +472,7 @@ nnoremap <silent> <leader>h :Leaderf help --popup<CR>
 
 "{{ URL related
 """"""""""""""""""""""""""""open-browser.vim settings"""""""""""""""""""
-if g:is_win || g:is_mac
+if g:is_win || g:is_mac || g:is_linux
   " Disable netrw's gx mapping.
   let g:netrw_nogx = 1
 
@@ -631,7 +632,7 @@ let g:vim_markdown_toc_autofit = 1
 
 """""""""""""""""""""""""markdown-preview settings"""""""""""""""""""
 " Only setting this for suitable platforms
-if g:is_win || g:is_mac
+if g:is_win || g:is_mac || g:is_linux
   " Do not close the preview tab when switching to other buffers
   let g:mkdp_auto_close = 0
 
@@ -674,7 +675,7 @@ call deoplete#custom#source('emoji', 'converters', ['converter_emoji'])
 
 "{{ LaTeX editting
 """"""""""""""""""""""""""""vimtex settings"""""""""""""""""""""""""""""
-if ( g:is_win || g:is_mac ) && executable('latex')
+if ( g:is_win || g:is_mac || g:is_linux ) && executable('latex')
   " Set up LaTeX flavor
   let g:tex_flavor = 'latex'
 
