@@ -39,6 +39,9 @@ endif
 " Python source for deoplete
 Plug 'zchee/deoplete-jedi', { 'for': 'python' }
 
+" fzf
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+
 " Vim source for deoplete
 Plug 'Shougo/neco-vim', { 'for': 'vim' }
 "}}
