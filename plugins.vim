@@ -60,6 +60,7 @@ Plug 'Vimjas/vim-python-pep8-indent', {'for': 'python'}
 
 " Python-related text object
 Plug 'jeetsukumaran/vim-pythonsense'
+Plug 'machakann/vim-swap'
 "}}
 
 "{{ Search related plugins
@@ -100,15 +101,15 @@ endif
 " Plug 'lifepillar/vim-gruvbox8'
 Plug 'ayu-theme/ayu-vim'
 Plug 'srcery-colors/srcery-vim'
-" Plug 'sjl/badwolf'
-" Plug 'ajmwagar/vim-deus'
-" Plug 'sainnhe/vim-color-desert-night'
-" Plug 'YorickPeterse/happy_hacking.vim'
-" Plug 'lifepillar/vim-solarized8'
-" Plug 'sickill/vim-monokai'
-" Plug 'whatyouhide/vim-gotham'
-" Plug 'rakr/vim-one'
-" Plug 'kaicataldo/material.vim'
+Plug 'sjl/badwolf'
+Plug 'ajmwagar/vim-deus'
+Plug 'https://gitlab.com/yorickpeterse/happy_hacking.vim.git'
+Plug 'lifepillar/vim-solarized8'
+Plug 'patstockwell/vim-monokai-tasty'
+Plug 'rakr/vim-one'
+Plug 'kaicataldo/material.vim'
+Plug 'joshdick/onedark.vim'
+Plug 'KeitaNakamura/neodark.vim'
 
 if !exists('g:started_by_firenvim')
   " colorful status line and theme
@@ -171,6 +172,8 @@ Plug 'mbbill/undotree'
 if g:is_win || g:is_mac
   Plug 'svermeulen/vim-yoink'
 endif
+
+Plug 'bfredl/nvim-miniyank'
 
 " Handy unix command inside Vim (Rename, Move etc.)
 Plug 'tpope/vim-eunuch'
@@ -242,7 +245,8 @@ Plug 'chrisbra/unicode.vim'
 Plug 'wellle/targets.vim'
 
 " Plugin to manipulate characer pairs quickly
-Plug 'tpope/vim-surround'
+" Plug 'tpope/vim-surround'
+Plug 'machakann/vim-sandwich'
 
 " Add indent object for vim (useful for languages like Python)
 Plug 'michaeljsmith/vim-indent-object'
@@ -283,8 +287,8 @@ Plug 'mattn/emmet-vim'
 " Modern matchit implementation
 Plug 'andymass/vim-matchup'
 
-" Simulating smooth scroll motions with physcis
-Plug 'yuttie/comfortable-motion.vim'
+" Smoothie motions
+Plug 'psliwka/vim-smoothie'
 
 Plug 'tpope/vim-scriptease'
 
@@ -467,10 +471,15 @@ let g:Lf_UseVersionControlTool = 0
 let g:Lf_ShortcutF = ''
 let g:Lf_ShortcutB = ''
 
+" set up working directory for git repository
+let g:Lf_WorkingDirectoryMode = 'a'
+
 " Search files in popup window
-nnoremap <silent> <leader>f :Leaderf file --popup<CR>
+nnoremap <silent> <leader>f :<C-U>Leaderf file --popup<CR>
 " Search vim help files
-nnoremap <silent> <leader>h :Leaderf help --popup<CR>
+nnoremap <silent> <leader>h :<C-U>Leaderf help --popup<CR>
+" Search tags in current buffer
+nnoremap <silent> <leader>t :<C-U>Leaderf bufTag --popup<CR>
 "}}
 
 "{{ URL related
@@ -488,7 +497,7 @@ endif
 "{{ Navigation and tags
 """"""""""""""""""""""""""" tagbar settings """"""""""""""""""""""""""""""""""
 " Shortcut to toggle tagbar window
-" nnoremap <silent> <Space>t :TagbarToggle<CR>
+" nnoremap <silent> <Space>t :<C-U>TagbarToggle<CR>
 
 " Add support for markdown files in tagbar.
 if g:is_win
@@ -525,7 +534,18 @@ let g:vista_echo_cursor = 0
 " Stay in current window when vista window is opened
 let g:vista_stay_on_open = 0
 
-nnoremap <silent> <Space>t :Vista!!<CR>
+nnoremap <silent> <Space>t :<C-U>Vista!!<CR>
+
+function! s:close_vista_win() abort
+  if winnr('$') == 1 && getbufvar(bufnr(), '&filetype') ==# 'vista'
+    quit
+  endif
+endfunction
+
+augroup vista_close_win
+  autocmd!
+  autocmd BufEnter * call s:close_vista_win()
+augroup END
 "}}
 
 "{{ File editting
@@ -549,13 +569,13 @@ let g:auto_save_silent = 0
 
 """"""""""""""""""""""""""""vim-yoink settings"""""""""""""""""""""""""
 if g:is_win || g:is_mac
-  " ctrl-n and ctrl-p will not work if you add the TextChanged event to
-  " vim-auto-save events
+  " ctrl-n and ctrl-p will not work if you add the TextChanged event to vim-auto-save events.
   " nmap <c-n> <plug>(YoinkPostPasteSwapBack)
   " nmap <c-p> <plug>(YoinkPostPasteSwapForward)
 
-  nmap p <plug>(YoinkPaste_p)
-  nmap P <plug>(YoinkPaste_P)
+  " The following p/P mappings are also needed for ctrl-n and ctrl-p to work
+  " nmap p <plug>(YoinkPaste_p)
+  " nmap P <plug>(YoinkPaste_P)
 
   " Cycle the yank stack with the following mappings
   nmap [y <plug>(YoinkRotateBack)
@@ -571,6 +591,11 @@ if g:is_win || g:is_mac
   " Record yanks in system clipboard
   let g:yoinkSyncSystemClipboardOnFocus = 1
 endif
+
+""""""""""""""""""""""""""""nvim-minipyank settings"""""""""""""""""""""""""
+nmap p <Plug>(miniyank-autoput)
+nmap P <Plug>(miniyank-autoPut)
+"}}
 
 "{{ Linting and formating
 """""""""""""""""""""""""""""" ale settings """""""""""""""""""""""
@@ -640,8 +665,8 @@ if g:is_win || g:is_mac || g:is_linux
   let g:mkdp_auto_close = 0
 
   " Shortcuts to start and stop markdown previewing
-  nnoremap <silent> <M-m> :MarkdownPreview<CR>
-  nnoremap <silent> <M-S-m> :MarkdownPreviewStop<CR>
+  nnoremap <silent> <M-m> :<C-U>MarkdownPreview<CR>
+  nnoremap <silent> <M-S-m> :<C-U>MarkdownPreviewStop<CR>
 endif
 
 """"""""""""""""""""""""vim-markdownfootnotes settings""""""""""""""""""""""""
@@ -676,6 +701,13 @@ nmap ga <Plug>(UnicodeGA)
 call deoplete#custom#source('emoji', 'converters', ['converter_emoji'])
 "}}
 
+"{{ text objects
+""""""""""""""""""""""""""""vim-sandwich settings"""""""""""""""""""""""""""""
+" Map s to nop since s in used by vim-sandwich. Use cl instead of s.
+nmap s <Nop>
+omap s <Nop>
+"}}
+
 "{{ LaTeX editting
 """"""""""""""""""""""""""""vimtex settings"""""""""""""""""""""""""""""
 if ( g:is_win || g:is_mac || g:is_linux ) && executable('latex')
@@ -685,11 +717,11 @@ if ( g:is_win || g:is_mac || g:is_linux ) && executable('latex')
   " Deoplete configurations for autocompletion to work
   call deoplete#custom#var('omni', 'input_patterns', {
         \ 'tex': g:vimtex#re#deoplete
-        \})
+        \ })
 
   let g:vimtex_compiler_latexmk = {
         \ 'build_dir' : 'build',
-        \}
+        \ }
 
   " TOC settings
   let g:vimtex_toc_config = {
@@ -701,7 +733,7 @@ if ( g:is_win || g:is_mac || g:is_linux ) && executable('latex')
         \ 'show_help' : 1,
         \ 'show_numbers' : 1,
         \ 'mode' : 2,
-        \}
+        \ }
 
   " Viewer settings for different platforms
   if g:is_win
@@ -710,33 +742,27 @@ if ( g:is_win || g:is_mac || g:is_linux ) && executable('latex')
     let g:vimtex_view_general_options = '-reuse-instance -forward-search @tex @line @pdf'
   endif
 
+  " The following code is adapted from https://gist.github.com/skulumani/7ea00478c63193a832a6d3f2e661a536.
   if g:is_mac
     " let g:vimtex_view_method = "skim"
-    let g:vimtex_view_general_viewer
-          \ = '/Applications/Skim.app/Contents/SharedSupport/displayline'
+    let g:vimtex_view_general_viewer = '/Applications/Skim.app/Contents/SharedSupport/displayline'
     let g:vimtex_view_general_options = '-r @line @pdf @tex'
 
     " This adds a callback hook that updates Skim after compilation
     let g:vimtex_compiler_callback_hooks = ['UpdateSkim']
 
-    function! UpdateSkim(status)
+    function! UpdateSkim(status) abort
       if !a:status | return | endif
 
       let l:out = b:vimtex.out()
-      let l:tex = expand('%:p')
+      let l:src_file_path = expand('%:p')
       let l:cmd = [g:vimtex_view_general_viewer, '-r']
 
       if !empty(system('pgrep Skim'))
         call extend(l:cmd, ['-g'])
       endif
 
-      if has('nvim')
-        call jobstart(l:cmd + [line('.'), l:out, l:tex])
-      elseif has('job')
-        call job_start(l:cmd + [line('.'), l:out, l:tex])
-      else
-        call system(join(l:cmd + [line('.'), shellescape(l:out), shellescape(l:tex)], ' '))
-      endif
+      call jobstart(l:cmd + [line('.'), l:out, l:src_file_path])
     endfunction
   endif
 endif
@@ -821,21 +847,6 @@ augroup matchup_matchword_highlight
   autocmd ColorScheme * hi MatchWord cterm=underline gui=underline
 augroup END
 
-""""""""""""""""""""""""comfortable-motion settings """"""""""""""""""""""
-let g:comfortable_motion_scroll_down_key = 'j'
-let g:comfortable_motion_scroll_up_key = 'k'
-
-let g:comfortable_motion_no_default_key_mappings = 1
-" scroll based on window height
-nnoremap <silent> <C-d> :call comfortable_motion#flick(winheight(0) * 2)<CR>
-nnoremap <silent> <C-u> :call comfortable_motion#flick(winheight(0) * -2)<CR>
-nnoremap <silent> <C-f> :call comfortable_motion#flick(winheight(0) * 4)<CR>
-nnoremap <silent> <C-b> :call comfortable_motion#flick(winheight(0) * -4)<CR>
-
-" Mouse settings
-noremap <silent> <ScrollWheelDown> :call comfortable_motion#flick(20)<CR>
-noremap <silent> <ScrollWheelUp>   :call comfortable_motion#flick(-20)<CR>
-
 """""""""""""""""""""""""" asyncrun.vim settings """"""""""""""""""""""""""
 " Automatically open quickfix window of 6 line tall after asyncrun starts
 let g:asyncrun_open = 6
@@ -871,6 +882,6 @@ if exists('g:started_by_firenvim') && g:started_by_firenvim
 endif
 
 """"""""""""""""""""""""""""""nvim-gdb settings""""""""""""""""""""""""""""""
-nnoremap <leader>dp :GdbStartPDB python -m pdb %<CR>
+nnoremap <leader>dp :<C-U>GdbStartPDB python -m pdb %<CR>
 "}}
 "}
