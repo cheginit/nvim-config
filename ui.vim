@@ -15,7 +15,8 @@ set background=dark
 let s:candidate_theme = ['gruvbox8', 'srcery', 'badwolf', 'deus', 'happy_hacking', 'solarized8',
       \ 'monokai_tasty', 'vim_one', 'material', 'onedark', 'ayu']
 let s:idx = utils#RandInt(0, len(s:candidate_theme)-1)
-let s:theme = s:candidate_theme[s:idx]
+" let s:theme = s:candidate_theme[s:idx]
+let s:theme = s:candidate_theme[-2]
 
 let s:my_theme_dict = {}
 
@@ -46,15 +47,6 @@ function! s:my_theme_dict.srcery() dict abort
   colorscheme srcery
 endfunction
 
-function! s:my_theme_dict.badwolf() dict abort
-  if !utils#HasColorscheme('badwolf') | return | endif
-
-  let g:badwolf_darkgutter = 0
-  " Make the tab line lighter than the background.
-  let g:badwolf_tabline = 2
-  colorscheme badwolf
-endfunction
-
 function! s:my_theme_dict.deus() dict abort
   if !utils#HasColorscheme('deus') | return | endif
 
@@ -75,10 +67,9 @@ function! s:my_theme_dict.solarized8() dict abort
   colorscheme solarized8_high
 endfunction
 
-function! s:my_theme_dict.monokai_tasty() dict abort
-  if !utils#HasColorscheme('vim-monokai-tasty') | return | endif
-  let g:vim_monokai_tasty_italic = 1
-  colorscheme vim-monokai-tasty
+function! s:my_theme_dict.monokai() dict abort
+  if !utils#HasColorscheme('monokai') | return | endif
+  colorscheme monokai
 endfunction
 
 function! s:my_theme_dict.vim_one() dict abort

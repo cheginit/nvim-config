@@ -26,8 +26,8 @@ itself and the configuration on different platforms (Linux, macOS and Windows).
 + Faster code commentting via [vim-commentar](https://github.com/tpope/vim-commentary).
 + Asynchronous code execution via [asynrun.vim](https://github.com/skywind3000/asyncrun.vim)
 + Fuzzy searching in current project quickly via [LeaderF](https://github.com/Yggdroot/LeaderF).
-+ Color theme via [vim-gruvbox8](https://github.com/lifepillar/vim-gruvbox8).
-+ Tags navigation via [tagbar](https://github.com/majutsushi/tagbar) or [vista](https://github.com/liuchengxu/vista.vim).
++ Color theme via [vim-gruvbox8](https://github.com/lifepillar/vim-gruvbox8) and other beautiful themes.
++ Tags navigation via [vista](https://github.com/liuchengxu/vista.vim).
 + Ultra fast snippet insertion via [Ultisnips](https://github.com/SirVer/ultisnips).
 + Faster matching pair insertion and jump via [auto-pairs](https://github.com/jiangmiao/auto-pairs).
 + Smarter and faster matching pair management (add, replace or delete) via [vim-sandwich](https://github.com/machakann/vim-sandwich).
@@ -37,7 +37,7 @@ itself and the configuration on different platforms (Linux, macOS and Windows).
 + Markdown writing and syntax highlighting via [vim-markdown](https://github.com/plasticboy/vim-markdown),
   MarkdownPrievwing via [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim).
 + LaTeX editing via [vimtex](https://github.com/lervag/vimtex)[^1].
-+ Comfortable scroll via [comfortable-motion.vim](https://github.com/yuttie/comfortable-motion.vim).
++ Smooth scroll experience via [vim-smoothie](https://github.com/psliwka/vim-smoothie).
 + ......
 
 # Shortcuts
@@ -45,29 +45,32 @@ itself and the configuration on different platforms (Linux, macOS and Windows).
 Some of the shortcuts I use frequently. In the following shortcuts, `<leader>`
 represents the `,` character.
 
-| Shortcut          | Mode   | Description                                               |
-|-------------------|--------|-----------------------------------------------------------|
-| `<leader>f`       | Normal | Fuzzy file search in a floating window                    |
-| `<leader>h`       | Normal | Fuzzy help search in a floating window                    |
-| `<leader>b`       | Normal | Fuzzy buffer tag search in a floating window              |
-| `<leader><Space>` | Normal | Remove trailing whitespaces                               |
-| `<leader>v`       | Normal | Reselect last pasted text                                 |
-| `<leader>ev`      | Normal | Edit Neovim config in a new tabpage                       |
-| `<leader>sv`      | Normal | Reload Neovim config                                      |
-| `<leader>q`       | Normal | Quit current window                                       |
-| `<leader>Q`       | Normal | Quit all window and close Neovim                          |
-| `<leader>w`       | Normal | Save current buffer content                               |
-| `<leader>cd`      | Normal | Change current directory to where current file is         |
-| `<leader>y`       | Normal | Copy the content of entire buffer to default register     |
-| `<leader>cl`      | Normal | Toggle cursor column                                      |
-| `<space>t`        | Normal | Toggle tag window (show project tags in the right window) |
-| `<F11>`           | Normal | Toggle spell checking                                     |
-| `<F12>`           | Normal | Toggle paste mode                                         |
-| `\x`              | Normal | Close location or quickfix window                         |
-| `\d`              | Normal | Close current buffer and go to previous buffer            |
-| `ctrl-u`          | Insert | Turn word under cursor to upper case                      |
-| `ctrl-t`          | Insert | Turn word under cursor to title case                      |
-| `jk`              | Insert | Return to Normal mode (faster `<ESC>`)                    |
+| Shortcut          | Mode          | platform        | Description                                               |
+|-------------------|---------------|-----------------|-----------------------------------------------------------|
+| `<leader>f`       | Normal        | Linux/macOS/Win | Fuzzy file search in a floating window                    |
+| `<leader>h`       | Normal        | Linux/macOS/Win | Fuzzy help search in a floating window                    |
+| `<leader>b`       | Normal        | Linux/macOS/Win | Fuzzy buffer tag search in a floating window              |
+| `<leader><Space>` | Normal        | Linux/macOS/Win | Remove trailing whitespaces                               |
+| `<leader>v`       | Normal        | Linux/macOS/Win | Reselect last pasted text                                 |
+| `<leader>ev`      | Normal        | Linux/macOS/Win | Edit Neovim config in a new tabpage                       |
+| `<leader>sv`      | Normal        | Linux/macOS/Win | Reload Neovim config                                      |
+| `<leader>q`       | Normal        | Linux/macOS/Win | Quit current window                                       |
+| `<leader>Q`       | Normal        | Linux/macOS/Win | Quit all window and close Neovim                          |
+| `<leader>w`       | Normal        | Linux/macOS/Win | Save current buffer content                               |
+| `<leader>cd`      | Normal        | Linux/macOS/Win | Change current directory to where current file is         |
+| `<leader>y`       | Normal        | Linux/macOS/Win | Copy the content of entire buffer to default register     |
+| `<leader>cl`      | Normal        | Linux/macOS/Win | Toggle cursor column                                      |
+| `<space>t`        | Normal        | Linux/macOS/Win | Toggle tag window (show project tags in the right window) |
+| `<F11>`           | Normal        | Linux/macOS/Win | Toggle spell checking                                     |
+| `<F12>`           | Normal        | Linux/macOS/Win | Toggle paste mode                                         |
+| `\x`              | Normal        | Linux/macOS/Win | Close location or quickfix window                         |
+| `\d`              | Normal        | Linux/macOS/Win | Close current buffer and go to previous buffer            |
+| `{count}gb`       | Normal        | Linux/macOS/Win | Go to {count} buffer or next buffer in the buffer list.   |
+| `Alt-M`           | Normal        | macOS/Win       | Render Markdown to HTML and open it in system browser     |
+| `ob`              | Normal/Visual | macOS/Win       | Open link under cursor or search visual selection         |
+| `ctrl-u`          | Insert        | Linux/macOS/Win | Turn word under cursor to upper case                      |
+| `ctrl-t`          | Insert        | Linux/macOS/Win | Turn word under cursor to title case                      |
+| `jk`              | Insert        | Linux/macOS/Win | Return to Normal mode (faster `<ESC>`)                    |
 
 
 # Trouble shooting
@@ -79,6 +82,10 @@ provided by health check.
 If you still have an issue, you may [open a new issue](https://github.com/jdhao/nvim-config/issues).
 
 # Further readings
+
+Some of the resources that I find helpful in mastering Vim is
+[here](docs/vim_resources.md). You may also be interested in my post in
+configuring Vim on different platforms:
 
 + [Config nvim on Linux for Python development](https://jdhao.github.io/2018/12/24/centos_nvim_install_use_guide_en/)
 + [Nvim config on Windows 10](https://jdhao.github.io/2018/11/15/neovim_configuration_windows/)

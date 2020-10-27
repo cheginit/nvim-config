@@ -101,11 +101,12 @@ endif
 " Plug 'lifepillar/vim-gruvbox8'
 Plug 'ayu-theme/ayu-vim'
 Plug 'srcery-colors/srcery-vim'
-Plug 'sjl/badwolf'
 Plug 'ajmwagar/vim-deus'
 Plug 'https://gitlab.com/yorickpeterse/happy_hacking.vim.git'
 Plug 'lifepillar/vim-solarized8'
-Plug 'patstockwell/vim-monokai-tasty'
+" Do not try other monokai-tasty and monokai-pro anymore, they
+" all have bad DiffDelete highlight issues.
+Plug 'sickill/vim-monokai'
 Plug 'rakr/vim-one'
 Plug 'kaicataldo/material.vim'
 Plug 'joshdick/onedark.vim'
@@ -137,7 +138,6 @@ if executable('ctags')
   " plugin to manage your tags
   Plug 'ludovicchabant/vim-gutentags'
   " show file tags in vim window
-  Plug 'majutsushi/tagbar', { 'on': ['TagbarToggle', 'TagbarOpen'] }
   Plug 'liuchengxu/vista.vim'
 endif
 "}}
@@ -162,11 +162,8 @@ Plug 'christoomey/vim-titlecase'
 " Autosave files on certain events
 Plug '907th/vim-auto-save'
 
-" graphcial undo history, see https://github.com/mbbill/undotree
-Plug 'mbbill/undotree'
-
-" another plugin to show undo history
-" Plug 'simnalamburt/vim-mundo'
+" Show undo history visually
+Plug 'simnalamburt/vim-mundo'
 
 " Manage your yank history
 if g:is_win || g:is_mac
@@ -205,6 +202,7 @@ Plug 'mhinz/vim-signify'
 
 " Git command inside vim
 Plug 'tpope/vim-fugitive'
+Plug 'rhysd/git-messenger.vim'
 
 " Git commit browser
 Plug 'junegunn/gv.vim', { 'on': 'GV' }
@@ -495,32 +493,6 @@ endif
 "}}
 
 "{{ Navigation and tags
-""""""""""""""""""""""""""" tagbar settings """"""""""""""""""""""""""""""""""
-" Shortcut to toggle tagbar window
-" nnoremap <silent> <Space>t :<C-U>TagbarToggle<CR>
-
-" Add support for markdown files in tagbar.
-if g:is_win
-  let g:md_ctags_bin=fnamemodify(g:nvim_config_root."\\tools\\markdown2ctags.exe", ':p')
-else
-  let g:md_ctags_bin=fnamemodify(g:nvim_config_root.'/tools/markdown2ctags.py', ':p')
-endif
-
-let g:tagbar_type_markdown = {
-  \ 'ctagstype': 'markdown',
-  \ 'ctagsbin' : g:md_ctags_bin,
-  \ 'ctagsargs' : '-f - --sort=yes',
-  \ 'kinds' : [
-  \ 's:sections',
-  \ 'i:images'
-  \ ],
-  \ 'sro' : '|',
-  \ 'kind2scope' : {
-  \ 's' : 'section',
-  \ },
-  \ 'sort': 0,
-  \ }
-
 """"""""""""""""""""""""""" vista settings """"""""""""""""""""""""""""""""""
 " Double click to go to a tag
 nnoremap <silent> <2-LeftMouse> :<C-U>call vista#cursor#FoldOrJump()<CR>
@@ -566,6 +538,12 @@ let g:auto_save_events = ['InsertLeave', 'TextChanged']
 
 " Whether to show autosave status on command line
 let g:auto_save_silent = 0
+
+""""""""""""""""""""""""vim-mundo settings"""""""""""""""""""""""
+let g:mundo_verbose_graph = 0
+let g:mundo_width = 80
+
+nnoremap <silent> <Space>u :MundoToggle<CR>
 
 """"""""""""""""""""""""""""vim-yoink settings"""""""""""""""""""""""""
 if g:is_win || g:is_mac
