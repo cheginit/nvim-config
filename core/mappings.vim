@@ -110,10 +110,6 @@ inoremap <expr> <esc> ((pumvisible())?("\<C-e>"):("\<esc>"))
 inoremap <expr> <tab> pumvisible() ? "\<c-n>" : "\<tab>"
 inoremap <expr> <s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 
-" Use <c-d> and <c-u> to scroll the completion menu.
-inoremap <expr> <C-d> pumvisible() ? "\<PageDown>" : "\<C-d>"
-inoremap <expr> <C-u> pumvisible() ? "\<PageUp>" : "\<C-u>"
-
 " Edit and reload init.vim quickly
 nnoremap <silent> <leader>ev :<C-U>tabnew $MYVIMRC <bar> tcd %:h<cr>
 nnoremap <silent> <leader>sv :<C-U>silent update $MYVIMRC <bar> source $MYVIMRC <bar>
@@ -123,7 +119,7 @@ nnoremap <silent> <leader>sv :<C-U>silent update $MYVIMRC <bar> source $MYVIMRC 
 nnoremap <expr> <leader>v printf('`[%s`]', getregtype()[0])
 
 " Search in selected region
-vnoremap / :<C-U>call feedkeys('/\%>'.(line("'<")-1).'l\%<'.(line("'>")+1)."l")<CR>
+xnoremap / :<C-U>call feedkeys('/\%>'.(line("'<")-1).'l\%<'.(line("'>")+1)."l")<CR>
 
 " Find and replace (like Sublime Text 3)
 nnoremap <C-H> :%s/
@@ -214,4 +210,7 @@ nnoremap <Left> <C-W>h
 nnoremap <Right> <C-W>l
 nnoremap <Up> <C-W>k
 nnoremap <Down> <C-W>j
+
+xnoremap <silent> iu :<C-U>call text_obj#URL()<CR>
+onoremap <silent> iu :<C-U>call text_obj#URL()<CR>
 "}

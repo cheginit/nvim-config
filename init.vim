@@ -14,13 +14,13 @@
 
 "{ Header and Licence
 "{{ header info
-" Description: This is my Neovim configuration which supports Mac, Linux and
-" Windows, with various plugins configured. This configuration evolves as I
-" learn more about Nvim and becomes more proficient in using Nvim. Since it is
-" very long (more than 1000 lines!), you should read it carefully and
-" take only the settings and options which suits you. I would not recommend
-" downloading this file and replace your own init.vim. Good configurations are
-" built over time and take your time to polish.
+" Description: This is my personal Neovim configuration supporting Mac, Linux
+" and Windows, with various plugins configured. This configuration evolves as
+" I learn more about Nvim and becomes more proficient in using Nvim. Since it
+" is very long (more than 1000 lines!), you should read it carefully and take
+" only the settings and options that suits you. I would not recommend cloning
+" this repo and replace your own config. Good configurations are personal,
+" built over time with a lot of polish.
 " Author: Jie-dong Hao
 " Email: jdhao@hotmail.com
 "}}
@@ -60,6 +60,6 @@ let g:config_file_list = ['variables.vim',
 
 let g:nvim_config_root = expand('<sfile>:p:h')
 for s:fname in g:config_file_list
-  execute printf('source %s/%s', g:nvim_config_root, s:fname)
+  execute printf('source %s/core/%s', g:nvim_config_root, s:fname)
 endfor
 "}

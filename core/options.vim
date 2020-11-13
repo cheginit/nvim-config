@@ -1,8 +1,8 @@
 scriptencoding utf-8
 
 "{ Builtin options and settings
-" change filechar for folding, vertical split, and message separator
-set fillchars=fold:\ ,vert:\│,msgsep:‾
+" change fillchars for folding, vertical split, end of buffer, and message separator
+set fillchars=fold:\ ,vert:\│,eob:\ ,msgsep:‾
 
 " Paste mode toggle, it seems that Neovim's bracketed paste mode
 " does not work very well for nvim-qt, so we use good-old paste mode
@@ -60,7 +60,6 @@ set showbreak=↪
 
 " List all matches and complete till longest common string
 set wildmode=list:longest
-set wildignorecase  " ignore file and dir name cases in cmd-completion
 
 set cursorline  " Show current line where the cursor is
 
@@ -81,9 +80,11 @@ set inccommand=nosplit  " Show the result of substitution in real time for previ
 " Ignore certain files and folders when globbing
 set wildignore+=*.o,*.obj,*.bin,*.dll,*.exe
 set wildignore+=*/.git/*,*/.svn/*,*/__pycache__/*,*/build/**
+set wildignore+=*.jpg,*.png,*.jpeg,*.bmp,*.gif,*.tiff,*.svg,*.ico
 set wildignore+=*.pyc
 set wildignore+=*.DS_Store
 set wildignore+=*.aux,*.bbl,*.blg,*.brf,*.fls,*.fdb_latexmk,*.synctex.gz
+set wildignorecase  " ignore file and dir name cases in cmd-completion
 
 " Ask for confirmation when handling unsaved or read-only files
 set confirm
@@ -103,11 +104,7 @@ set autowrite
 " lastmod time is drawn from https://stackoverflow.com/q/8426736/6064933
 set title
 set titlestring=
-if g:is_linux
-  set titlestring+=%(%{hostname()}\ \ %)
-endif
-set titlestring+=%(%{expand('%:p:~')}\ \ %)
-set titlestring+=%{strftime('%Y-%m-%d\ %H:%M',getftime(expand('%')))}
+set titlestring=%{utils#Get_titlestr()}
 
 " Persistent undo even after you close a file and re-open it
 set undofile
@@ -164,6 +161,8 @@ augroup END
 " Set up cursor color and shape in various mode, ref:
 " https://github.com/neovim/neovim/wiki/FAQ#how-to-change-cursor-color-in-the-terminal
 set guicursor=n-v-c:block-Cursor/lCursor,i-ci-ve:ver25-Cursor2/lCursor2,r-cr:hor20,o:hor20
+
+set signcolumn=auto:2
 "}
 
 let g:vimtex_compiler_progname='nvr'

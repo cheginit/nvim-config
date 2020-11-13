@@ -1,55 +1,37 @@
 scriptencoding utf-8
 "{ Plugin installation
-"{{ Vim-plug Install and related settings
+"{{ Vim-plug related settings.
+" The root directory to install all plugins.
+let g:plugin_home=expand(stdpath('data') . '/plugged')
 
-" Auto-install vim-plug on different systems if it does not exist. For
-" Windows, only Windows 10 with curl installed are supported (after Windows 10
-" build 17063, source:
-" https://devblogs.microsoft.com/commandline/tar-and-curl-come-to-windows/).
-" The following script to install vim-plug is adapted from vim-plug
-" wiki: https://github.com/junegunn/vim-plug/wiki/tips#tips
-let g:vim_plug_fpath = expand(stdpath('data') . '/site/autoload/plug.vim')
-if (g:is_win || g:is_mac) && !filereadable(g:vim_plug_fpath)
-  if !executable('curl')
-    echoerr 'Curl not available on your system, you may install vim-plug by yourself.'
-    finish
-  endif
-  echomsg 'Installing Vim-plug on your system'
-  let g:vim_plug_furl = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  silent execute printf('!curl -fLo %s --create-dirs %s', g:vim_plug_fpath, g:vim_plug_furl)
-  augroup plug_init
-      autocmd!
-      autocmd VimEnter * PlugInstall --sync | quit |source $MYVIMRC
+if empty(readdir(g:plugin_home))
+ augroup plug_init
+    autocmd!
+    autocmd VimEnter * PlugInstall --sync | quit |source $MYVIMRC
   augroup END
 endif
-
-" The directory to install plugins.
-let g:PLUGIN_HOME=expand(stdpath('data') . '/plugged')
 "}}
 
 "{{ Autocompletion related plugins
-call plug#begin(g:PLUGIN_HOME)
+call plug#begin(g:plugin_home)
 " Auto-completion
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-
-if executable('clang') && (g:is_mac || g:is_linux)
-  Plug 'deoplete-plugins/deoplete-clang'
-endif
-
-" Python source for deoplete
-Plug 'zchee/deoplete-jedi', { 'for': 'python' }
+" Language Server Protocol client
+Plug 'prabirshrestha/vim-lsp'
+Plug 'lighttiger2505/deoplete-vim-lsp'
 
 " fzf
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 
 " Vim source for deoplete
-Plug 'Shougo/neco-vim', { 'for': 'vim' }
+
+if !executable('vim-language-server')
+  " only use neco-vim when vim-language-server is not available
+  Plug 'Shougo/neco-vim', { 'for': 'vim' }
+endif
 "}}
 
-"{{ Python-related plugins
-" Python completion, goto definition etc.
-Plug 'davidhalter/jedi-vim', { 'for': 'python' }
-
+"{{ language-specific plugins
 " Python syntax highlighting and more
 if g:is_mac || g:is_win || g:is_linux
   Plug 'numirias/semshi', { 'do': ':UpdateRemotePlugins' }
@@ -61,6 +43,10 @@ Plug 'Vimjas/vim-python-pep8-indent', {'for': 'python'}
 " Python-related text object
 Plug 'jeetsukumaran/vim-pythonsense'
 Plug 'machakann/vim-swap'
+
+" IDE for Lisp
+" Plug 'kovisoft/slimv'
+Plug 'vlime/vlime', {'rtp': 'vim/', 'for': 'lisp'}
 "}}
 
 "{{ Search related plugins
@@ -102,7 +88,7 @@ endif
 Plug 'ayu-theme/ayu-vim'
 Plug 'srcery-colors/srcery-vim'
 Plug 'ajmwagar/vim-deus'
-Plug 'https://gitlab.com/yorickpeterse/happy_hacking.vim.git'
+Plug 'YorickPeterse/happy_hacking.vim'
 Plug 'lifepillar/vim-solarized8'
 " Do not try other monokai-tasty and monokai-pro anymore, they
 " all have bad DiffDelete highlight issues.
@@ -111,6 +97,7 @@ Plug 'rakr/vim-one'
 Plug 'kaicataldo/material.vim'
 Plug 'joshdick/onedark.vim'
 Plug 'KeitaNakamura/neodark.vim'
+Plug 'jsit/toast.vim'
 
 if !exists('g:started_by_firenvim')
   " colorful status line and theme
@@ -360,6 +347,84 @@ call deoplete#custom#option('auto_complete_delay', 100)
 " Enable deoplete auto-completion
 call deoplete#custom#option('auto_complete', v:true)
 
+"""""""""""""""""""""""""""" vim-lsp settings""""""""""""""""""""""""""
+" whether to enable diagnostics for vim-lsp (we may want to use ALE for other
+" plugins for that.
+let g:lsp_diagnostics_enabled = 1
+
+" show diagnostic signs
+let g:lsp_signs_enabled = 1
+let g:lsp_signs_error = {'text': '✗'}
+let g:lsp_signs_warning = {'text': '!'}
+let g:lsp_highlights_enabled = 0
+
+" Do not use virtual text, they are far too obstrusive.
+let g:lsp_virtual_text_enabled = 0
+" whether to echo a diagnostic message on statusline at cursor position
+let g:lsp_diagnostics_echo_cursor = 1
+" Whether to show diagnostic in floating window
+let g:lsp_diagnostics_float_cursor = 0
+" whether to enable highlight a symbol and its references
+let g:lsp_highlight_references_enabled = 1
+let g:lsp_preview_max_width = 80
+let g:lsp_diagnostics_float_delay = 100
+
+" set up pyls for vim-lsp
+if executable('pyls')
+  " pip install python-language-server
+  augroup pyls_setup
+    autocmd!
+    autocmd User lsp_setup call lsp#register_server({
+          \ 'name': 'pyls',
+          \ 'cmd': {server_info->['pyls']},
+          \ 'allowlist': ['python'],
+          \ 'workspace_config': {
+          \    'pyls':
+          \        {'configurationSources': ['flake8'],
+          \         'plugins': {'flake8': {'enabled': v:true},
+          \                     'pyflakes': {'enabled': v:false},
+          \                     'pycodestyle': {'enabled': v:false},
+          \                    }
+          \        }
+          \ }})
+  augroup END
+endif
+
+if executable('vim-language-server')
+  augroup LspVim
+    autocmd!
+    autocmd User lsp_setup call lsp#register_server({
+        \ 'name': 'vim-language-server',
+        \ 'cmd': {server_info->['vim-language-server', '--stdio']},
+        \ 'whitelist': ['vim'],
+        \ 'initialization_options': {
+        \   'vimruntime': $VIMRUNTIME,
+        \   'runtimepath': &rtp,
+        \ },
+        \ 'suggest': {
+        \ 'fromRuntimepath': v:true
+        \ }})
+  augroup END
+endif
+
+function! s:on_lsp_buffer_enabled() abort
+  if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
+  nmap <buffer> gd <plug>(lsp-definition)
+  nmap <buffer> gr <plug>(lsp-references)
+  nmap <buffer> gi <plug>(lsp-implementation)
+  nmap <buffer> gt <plug>(lsp-type-definition)
+  nmap <buffer> <leader>rn <plug>(lsp-rename)
+  nmap <buffer> [g <Plug>(lsp-previous-diagnostic)
+  nmap <buffer> ]g <Plug>(lsp-next-diagnostic)
+  nmap <buffer> K <plug>(lsp-hover)
+endfunction
+
+augroup lsp_install
+    au!
+    " call s:on_lsp_buffer_enabled only for languages that has the server registered.
+    autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+augroup END
+
 """""""""""""""""""""""""UltiSnips settings"""""""""""""""""""
 " Trigger configuration. Do not use <tab> if you use YouCompleteMe
 let g:UltiSnipsExpandTrigger='<c-j>'
@@ -376,30 +441,17 @@ let g:UltiSnipsJumpBackwardTrigger='<c-k>'
 let g:UltiSnipsSnippetDirectories=['UltiSnips', 'my_snippets']
 "}}
 
-"{{ Python-related
-""""""""""""""""""deoplete-jedi settings"""""""""""""""""""""""""""
-" Whether to show doc string
-let g:deoplete#sources#jedi#show_docstring = 0
-
-" For large package, set autocomplete wait time longer
-let g:deoplete#sources#jedi#server_timeout = 50
-
-" Ignore jedi errors during completion
-let g:deoplete#sources#jedi#ignore_errors = 1
-
-""""""""""""""""""""""""jedi-vim settings"""""""""""""""""""
-" Disable autocompletion, because I use deoplete for auto-completion
-let g:jedi#completions_enabled = 0
-
-" Whether to show function call signature
-let g:jedi#show_call_signatures = '0'
-
+"{{ Language specific plugin
 """""""""""""""""""""""""" semshi settings """""""""""""""""""""""""""""""
 " Do not highlight for all occurances of variable under cursor
 let g:semshi#mark_selected_nodes=0
 
 " Do not show error sign since linting plugin is specicialized for that
 let g:semshi#error_sign=v:false
+
+"""""""""""""""""""""""""" vlime settings """"""""""""""""""""""""""""""""
+command! -nargs=0 StartVlime call jobstart(printf("sbcl --load %s/vlime/lisp/start-vlime.lisp", g:plugin_home))
+
 "}}
 
 "{{ Search related
@@ -442,9 +494,9 @@ let g:Lf_UseCache = 0
 let g:Lf_WildIgnore = {
   \ 'dir': ['.git', '__pycache__', '.DS_Store'],
   \ 'file': ['*.exe', '*.dll', '*.so', '*.o', '*.pyc', '*.jpg', '*.png',
-  \ '*.gif', '*.db', '*.tgz', '*.tar.gz', '*.gz', '*.zip', '*.bin', '*.pptx',
-  \ '*.xlsx', '*.docx', '*.pdf', '*.tmp', '*.wmv', '*.mkv', '*.mp4',
-  \ '*.rmvb']
+  \ '*.gif', '*.svg', '*.ico', '*.db', '*.tgz', '*.tar.gz', '*.gz',
+  \ '*.zip', '*.bin', '*.pptx', '*.xlsx', '*.docx', '*.pdf', '*.tmp',
+  \ '*.wmv', '*.mkv', '*.mp4', '*.rmvb', '*.ttf', '*.ttc', '*.otf']
   \}
 
 " Do not show fancy icons for Linux server.
@@ -488,11 +540,16 @@ if g:is_win || g:is_mac || g:is_linux
 
   " Use another mapping for the open URL method
   nmap ob <Plug>(openbrowser-smart-search)
-  vmap ob <Plug>(openbrowser-smart-search)
+  xmap ob <Plug>(openbrowser-smart-search)
 endif
 "}}
 
 "{{ Navigation and tags
+""""""""""""""""""""""""""" gutentags settings """"""""""""""""""""""""""""""
+let g:gutentags_ctags_exclude = ['*.md', '*.html', '*.json', '*.toml', '*.css', '*.js',]
+" The path to store tags files, instead of in the project root.
+let g:gutentags_cache_dir = stdpath('cache') . '/ctags'
+
 """"""""""""""""""""""""""" vista settings """"""""""""""""""""""""""""""""""
 " Double click to go to a tag
 nnoremap <silent> <2-LeftMouse> :<C-U>call vista#cursor#FoldOrJump()<CR>
@@ -526,7 +583,7 @@ augroup END
 let g:titlecase_map_keys = 0
 
 nmap <leader>gt <Plug>Titlecase
-vmap <leader>gt <Plug>Titlecase
+xmap <leader>gt <Plug>Titlecase
 nmap <leader>gT <Plug>TitlecaseLine
 
 """"""""""""""""""""""""vim-auto-save settings"""""""""""""""""""""""
@@ -579,7 +636,6 @@ nmap P <Plug>(miniyank-autoPut)
 """""""""""""""""""""""""""""" ale settings """""""""""""""""""""""
 " linters for different filetypes
 let g:ale_linters = {
-  \ 'python': ['pylint'],
   \ 'vim': ['vint'],
   \ 'cpp': ['clang'],
   \ 'c': ['clang']
@@ -770,11 +826,14 @@ let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline#extensions#tabline#buffer_nr_format = '%s. '
 
 " Whether to show function or other tags on status line
-let g:airline#extensions#tagbar#enabled = 1
 let g:airline#extensions#vista#enabled = 1
+let g:airline#extensions#gutentags#enabled = 1
 
 " Do not show search index in statusline since it is shown on command line
 let g:airline#extensions#anzu#enabled = 0
+
+" Enable vim-airline extension for vim-lsp
+let g:airline#extensions#lsp#enabled = 1
 
 " Skip empty sections if there are nothing to show,
 " extracted from https://vi.stackexchange.com/a/9637/15292
@@ -795,6 +854,12 @@ let g:airline#extensions#hunks#non_zero_only = 1
 
 " Speed up airline
 let g:airline_highlighting_cache = 1
+
+""""""""""""""""""""""""""""vim-startify settings""""""""""""""""""""""""""""
+" Do not change working directory when opening files.
+let g:startify_change_to_dir = 0
+let g:startify_fortune_use_unicode = 1
+
 "}}
 
 "{{ Misc plugin setting
