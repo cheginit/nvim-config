@@ -315,10 +315,13 @@ call utils#Cabbrev('pc', 'PlugClean')
 let g:deoplete#enable_at_startup = 1
 
 " Maximum candidate window width
-call deoplete#custom#source('_', 'max_menu_width', 80)
+call deoplete#custom#option('max_menu_width', 80)
 
 " Minimum character length needed to activate auto-completion.
-call deoplete#custom#source('_', 'min_pattern_length', 1)
+call deoplete#custom#option('min_pattern_length', 1)
+
+" use fuzzy matcher
+call deoplete#custom#source('_', 'matchers', ['matcher_full_fuzzy'])
 
 " Whether to disable completion for certain syntax
 " call deoplete#custom#source('_', {
@@ -332,20 +335,20 @@ call deoplete#custom#source('_', {
 
 " Ignore certain sources, because they only cause nosie most of the time
 call deoplete#custom#option('ignore_sources', {
-   \ '_': ['around', 'buffer', 'tag']
+   \ '_': ['around', 'buffer']
    \ })
 
 " Candidate list item number limit
-call deoplete#custom#option('max_list', 30)
+call deoplete#custom#option('max_list', 15)
 
 " The number of processes used for the deoplete parallel feature.
-call deoplete#custom#option('num_processes', 16)
+call deoplete#custom#option('num_processes', 8)
 
 " The delay for completion after input, measured in milliseconds.
 call deoplete#custom#option('auto_complete_delay', 100)
 
-" Enable deoplete auto-completion
-call deoplete#custom#option('auto_complete', v:true)
+" lower case can also match upper case (upper case are hard to type!)
+call deoplete#custom#option({'camel_case': v:true,})
 
 """""""""""""""""""""""""""" vim-lsp settings""""""""""""""""""""""""""
 " whether to enable diagnostics for vim-lsp (we may want to use ALE for other
@@ -702,13 +705,6 @@ if g:is_win || g:is_mac || g:is_linux
   nnoremap <silent> <M-m> :<C-U>MarkdownPreview<CR>
   nnoremap <silent> <M-S-m> :<C-U>MarkdownPreviewStop<CR>
 endif
-
-""""""""""""""""""""""""vim-markdownfootnotes settings""""""""""""""""""""""""
-" Replace the default mappings provided by the plugin
-imap ^^ <Plug>AddVimFootnote
-nmap ^^ <Plug>AddVimFootnote
-imap @@ <Plug>ReturnFromFootnote
-nmap @@ <Plug>ReturnFromFootnote
 
 """"""""""""""""""""""""vim-grammarous settings""""""""""""""""""""""""""""""
 if g:is_mac
