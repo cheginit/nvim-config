@@ -5,7 +5,7 @@ scriptencoding utf-8
 let g:plugin_home=expand(stdpath('data') . '/plugged')
 
 if empty(readdir(g:plugin_home))
- augroup plug_init
+  augroup plug_init
     autocmd!
     autocmd VimEnter * PlugInstall --sync | quit |source $MYVIMRC
   augroup END
@@ -24,7 +24,6 @@ Plug 'lighttiger2505/deoplete-vim-lsp'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 
 " Vim source for deoplete
-
 if !executable('vim-language-server')
   " only use neco-vim when vim-language-server is not available
   Plug 'Shougo/neco-vim', { 'for': 'vim' }
@@ -49,7 +48,9 @@ Plug 'machakann/vim-swap'
 Plug 'vlime/vlime', {'rtp': 'vim/', 'for': 'lisp'}
 
 " C++ semantic highlighting
-Plug 'jackguo380/vim-lsp-cxx-highlight'
+if executable('ccls')
+  Plug 'jackguo380/vim-lsp-cxx-highlight'
+endif
 "}}
 
 "{{ Search related plugins
@@ -256,7 +257,7 @@ endif
 "{{ Tmux related plugins
 " Since tmux is only available on Linux and Mac, we only enable these plugins
 " for Linux and Mac
-if (g:is_linux || g:is_mac) && executable('tmux')
+if executable('tmux')
   " Let vim detect tmux focus event correctly, see
   " https://github.com/neovim/neovim/issues/9486 and
   " https://vi.stackexchange.com/q/18515/15292
@@ -268,7 +269,7 @@ endif
 "}}
 
 "{{ HTML related
-Plug 'mattn/emmet-vim'
+Plug 'mattn/emmet-vim', { 'for': ['markdown', 'javascript', 'css'] }
 "}}
 
 "{{ Misc plugins
@@ -666,9 +667,7 @@ nmap P <Plug>(miniyank-autoPut)
 " linters for different filetypes
 let g:ale_linters = {
   \ 'vim': ['vint'],
-  \ 'cpp': ['clang'],
-  \ 'c': ['clang']
-\}
+  \ }
 
 " Only run linters in the g:ale_linters dictionary
 let g:ale_linters_explicit = 1
@@ -680,13 +679,13 @@ let g:ale_sign_warning = '!'
 """""""""""""""""""""""""""""" neoformat settings """""""""""""""""""""""
 let g:neoformat_enabled_python = ['black', 'yapf']
 let g:neoformat_cpp_clangformat = {
-  \ 'exe': 'clang-format',
-  \ 'args': ['--style="{IndentWidth: 4}"']
-\}
+      \ 'exe': 'clang-format',
+      \ 'args': ['--style="{IndentWidth: 4}"']
+      \ }
 let g:neoformat_c_clangformat = {
-  \ 'exe': 'clang-format',
-  \ 'args': ['--style="{IndentWidth: 4}"']
-\}
+      \ 'exe': 'clang-format',
+      \ 'args': ['--style="{IndentWidth: 4}"']
+      \ }
 
 let g:neoformat_enabled_cpp = ['clangformat']
 let g:neoformat_enabled_c = ['clangformat']
