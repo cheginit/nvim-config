@@ -92,16 +92,12 @@ endif
 Plug 'ayu-theme/ayu-vim'
 Plug 'srcery-colors/srcery-vim'
 Plug 'ajmwagar/vim-deus'
-Plug 'YorickPeterse/happy_hacking.vim'
 Plug 'lifepillar/vim-solarized8'
-" Do not try other monokai-tasty and monokai-pro anymore, they
-" all have bad DiffDelete highlight issues.
-Plug 'sickill/vim-monokai'
-Plug 'rakr/vim-one'
 Plug 'kaicataldo/material.vim'
 Plug 'joshdick/onedark.vim'
 Plug 'KeitaNakamura/neodark.vim'
 Plug 'jsit/toast.vim'
+Plug 'ErichDonGubler/vim-sublime-monokai'
 
 if !exists('g:started_by_firenvim')
   " colorful status line and theme
@@ -296,6 +292,10 @@ endif
 if g:is_mac || g:is_linux || g:is_linux
   Plug 'sakhnik/nvim-gdb', { 'do': ':!./install.sh \| UpdateRemotePlugins' }
 endif
+
+" Session management plugin
+Plug 'tpope/vim-obsession'
+Plug 'dhruvasagar/vim-prosession'
 call plug#end()
 "}}
 "}
@@ -947,5 +947,9 @@ endif
 
 """"""""""""""""""""""""""""""nvim-gdb settings""""""""""""""""""""""""""""""
 nnoremap <leader>dp :<C-U>GdbStartPDB python -m pdb %<CR>
+
+
+""""""""""""""""""""""""""""""prosession settings""""""""""""""""""""""""""""""
+let g:prosession_dir = stdpath('data') . '/prosession'
 "}}
 "}
