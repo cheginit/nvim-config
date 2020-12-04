@@ -122,7 +122,7 @@ set pumheight=10  " Maximum number of items to show in popup menu
 " Insert mode key word completion setting
 set complete+=kspell complete-=w complete-=b complete-=u complete-=t
 
-set spelllang=en,cjk  " Spell languages
+set spelllang=en  " Spell languages
 set spellsuggest+=10  " The number of suggestions shown in the screen for z=
 
 " Align indent to next multiple value of shiftwidth. For its meaning,
