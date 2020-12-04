@@ -98,6 +98,7 @@ Plug 'joshdick/onedark.vim'
 Plug 'KeitaNakamura/neodark.vim'
 Plug 'jsit/toast.vim'
 Plug 'ErichDonGubler/vim-sublime-monokai'
+Plug 'humanoid-colors/vim-humanoid-colorscheme'
 
 if !exists('g:started_by_firenvim')
   " colorful status line and theme
@@ -295,7 +296,6 @@ endif
 
 " Session management plugin
 Plug 'tpope/vim-obsession'
-Plug 'dhruvasagar/vim-prosession'
 call plug#end()
 "}}
 "}
@@ -947,9 +947,5 @@ endif
 
 """"""""""""""""""""""""""""""nvim-gdb settings""""""""""""""""""""""""""""""
 nnoremap <leader>dp :<C-U>GdbStartPDB python -m pdb %<CR>
-
-
-""""""""""""""""""""""""""""""prosession settings""""""""""""""""""""""""""""""
-let g:prosession_dir = stdpath('data') . '/prosession'
 "}}
 "}
