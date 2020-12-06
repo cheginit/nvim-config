@@ -191,4 +191,9 @@ onoremap <silent> iu :<C-U>call text_obj#URL()<CR>
 " Text objects for entire buffer
 xnoremap <silent> iB 0ggoG
 onoremap <silent> iB :normal viB<CR>
+
+" Insert current date
+nnoremap <F5> "=strftime("%Y-%m-%d")<CR>P
+inoremap <F5> <C-R>=strftime("%Y-%m-%d")<CR>
+
 "}
