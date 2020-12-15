@@ -166,6 +166,7 @@ Plug 'tpope/vim-repeat'
 
 " Show the content of register in preview window
 " Plug 'junegunn/vim-peekaboo'
+Plug 'jdhao/better-escape.vim'
 "}}
 
 "{{ Linting, formating
