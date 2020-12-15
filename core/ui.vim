@@ -26,13 +26,6 @@ function! s:my_theme_dict.gruvbox8() dict abort
   colorscheme gruvbox8_hard
 endfunction
 
-function! s:my_theme_dict.ayu() dict abort
-  if !utils#HasColorscheme('ayu') | return | endif
-
-  let ayucolor="mirage"
-  colorscheme ayu
-endfunction
-
 function! s:my_theme_dict.srcery() dict abort
   if !utils#HasColorscheme('srcery') | return | endif
 
@@ -70,17 +63,6 @@ function! s:my_theme_dict.toast() dict abort
   if !utils#HasColorscheme('toast') | return | endif
 
   colorscheme toast
-endfunction
-
-augroup sublmonokai
-  autocmd!
-  autocmd ColorScheme sublimemonokai hi clear SignColumn
-augroup END
-
-function! s:my_theme_dict.sublimemonokai() dict abort
-  if !utils#HasColorscheme('sublimemonokai') | return | endif
-
-  colorscheme sublimemonokai
 endfunction
 
 function! s:my_theme_dict.humanoid() dict abort
