@@ -88,15 +88,16 @@ endif
 
 "{{ UI: Color, theme etc.
 " A list of colorscheme plugin you may want to try. Find what suits you.
-" Plug 'lifepillar/vim-gruvbox8'
 Plug 'ayu-theme/ayu-vim'
 Plug 'srcery-colors/srcery-vim'
+Plug 'lifepillar/vim-gruvbox8'
 Plug 'ajmwagar/vim-deus'
 Plug 'lifepillar/vim-solarized8'
 Plug 'joshdick/onedark.vim'
 Plug 'KeitaNakamura/neodark.vim'
 Plug 'jsit/toast.vim'
-Plug 'humanoid-colors/vim-humanoid-colorscheme'
+Plug 'sainnhe/edge'
+Plug 'sainnhe/sonokai'
 
 if !exists('g:started_by_firenvim')
   " colorful status line and theme
