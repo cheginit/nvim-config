@@ -208,10 +208,8 @@ Plug 'godlygeek/tabular', {'on': 'Tabularize'}
 " Markdown JSON header highlight plugin
 Plug 'elzr/vim-json', { 'for': ['json', 'markdown'] }
 
-" Markdown previewing (only for Mac and Windows)
-if g:is_win || g:is_mac || g:is_linux
-  Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug'] }
-endif
+" Markdown previewing
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug'] }
 
 " emoji
 " Plug 'https://gitlab.com/gi1242/vim-emoji-ab'
@@ -723,15 +721,12 @@ let g:vim_markdown_json_frontmatter = 1  " for JSON format
 let g:vim_markdown_toc_autofit = 1
 
 """""""""""""""""""""""""markdown-preview settings"""""""""""""""""""
-" Only setting this for suitable platforms
-if g:is_win || g:is_mac || g:is_linux
-  " Do not close the preview tab when switching to other buffers
-  let g:mkdp_auto_close = 0
+" Do not close the preview tab when switching to other buffers
+let g:mkdp_auto_close = 0
 
-  " Shortcuts to start and stop markdown previewing
-  nnoremap <silent> <M-m> :<C-U>MarkdownPreview<CR>
-  nnoremap <silent> <M-S-m> :<C-U>MarkdownPreviewStop<CR>
-endif
+" Shortcuts to start and stop markdown previewing
+nnoremap <silent> <M-m> :<C-U>MarkdownPreview<CR>
+nnoremap <silent> <M-S-m> :<C-U>MarkdownPreviewStop<CR>
 
 """"""""""""""""""""""""vim-grammarous settings""""""""""""""""""""""""""""""
 if g:is_mac
