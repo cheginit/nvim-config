@@ -180,6 +180,7 @@ Plug 'dense-analysis/ale'
 " Auto format tools
 Plug 'sbdchd/neoformat', { 'on': 'Neoformat' }
 " Plug 'Chiel92/vim-autoformat'
+Plug 'z0mbix/vim-shfmt', { 'for': 'sh' }
 "}}
 
 "{{ Git related plugins
@@ -691,6 +692,11 @@ let g:neoformat_c_clangformat = {
 let g:neoformat_enabled_cpp = ['clangformat']
 let g:neoformat_enabled_c = ['clangformat']
 "}}
+
+"""""""""""""""""""""""""""""" shfmt settings """""""""""""""""""""""
+if executable('shfmt')
+  let &l:formatprg='shfmt -i ' . &l:shiftwidth . ' -ln posix -sr -ci -s'
+endif
 
 "{{ Git-related
 """""""""""""""""""""""""vim-signify settings""""""""""""""""""""""""""""""
