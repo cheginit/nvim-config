@@ -696,6 +696,7 @@ let g:neoformat_enabled_c = ['clangformat']
 """""""""""""""""""""""""""""" shfmt settings """""""""""""""""""""""
 if executable('shfmt')
   let &l:formatprg='shfmt -i ' . &l:shiftwidth . ' -ln posix -sr -ci -s'
+  let g:shfmt_fmt_on_save = 1
 endif
 
 "{{ Git-related
