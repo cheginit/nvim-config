@@ -95,8 +95,8 @@ Plug 'ajmwagar/vim-deus'
 Plug 'lifepillar/vim-solarized8'
 Plug 'joshdick/onedark.vim'
 Plug 'KeitaNakamura/neodark.vim'
-Plug 'jsit/toast.vim'
 Plug 'sainnhe/edge'
+Plug 'ghifarit53/tokyonight-vim'
 Plug 'sainnhe/sonokai'
 
 if !exists('g:started_by_firenvim')
@@ -842,6 +842,7 @@ endif
 
 " Tabline settings
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 
 " Show buffer number for easier switching between buffer,

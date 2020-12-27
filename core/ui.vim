@@ -21,8 +21,8 @@ function! s:my_theme_dict.gruvbox8() dict abort
   " see https://github.com/morhetz/gruvbox/wiki/Terminal-specific#1-italics-is-disabled
   let g:gruvbox_italics=1
   let g:gruvbox_italicize_strings=1
-  let g:gruvbox_filetype_hi_groups = 0
-  let g:gruvbox_plugin_hi_groups = 0
+  let g:gruvbox_filetype_hi_groups = 1
+  let g:gruvbox_plugin_hi_groups = 1
   colorscheme gruvbox8_hard
 endfunction
 
@@ -53,12 +53,6 @@ function! s:my_theme_dict.neodark() dict abort
   colorscheme neodark
 endfunction
 
-function! s:my_theme_dict.toast() dict abort
-  if !utils#HasColorscheme('toast') | return | endif
-
-  colorscheme toast
-endfunction
-
 function! s:my_theme_dict.edge() dict abort
   if !utils#HasColorscheme('edge') | return | endif
 
@@ -75,8 +69,16 @@ function! s:my_theme_dict.sonokai() dict abort
   colorscheme sonokai
 endfunction
 
-let s:candidate_theme = ['gruvbox8', 'deus', 'solarized8', 'onedark',
-      \ 'neodark', 'toast', 'edge', 'sonokai']
+function! s:my_theme_dict.tokyonight() dict abort
+  if !utils#HasColorscheme('tokyonight') | return | endif
+
+  let g:tokyonight_style = 'night' " available: night, storm
+  let g:tokyonight_enable_italic = 1
+  colorscheme tokyonight
+endfunction
+
+let s:candidate_theme = ['gruvbox8', 'deus', 'solarized8', 'onedark', 'neodark',
+      \ 'edge', 'sonokai', 'tokyonight']
 let s:idx = utils#RandInt(0, len(s:candidate_theme)-1)
 let s:theme = s:candidate_theme[s:idx]
 let s:theme = 'onedark'
