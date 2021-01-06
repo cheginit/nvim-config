@@ -32,9 +32,7 @@ endif
 
 "{{ language-specific plugins
 " Python syntax highlighting and more
-if g:is_mac || g:is_win || g:is_linux
-  Plug 'numirias/semshi', { 'do': ':UpdateRemotePlugins' }
-endif
+Plug 'numirias/semshi', { 'do': ':UpdateRemotePlugins' }
 
 " Python indent (follows the PEP8 style)
 Plug 'Vimjas/vim-python-pep8-indent', {'for': 'python'}
