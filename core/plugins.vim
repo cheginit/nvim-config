@@ -190,9 +190,7 @@ Plug 'mhinz/vim-signify'
 
 " Git command inside vim
 Plug 'tpope/vim-fugitive'
-
-" Git commit browser
-Plug 'junegunn/gv.vim', { 'on': 'GV' }
+Plug 'APZelos/blamer.nvim'
 "}}
 
 "{{ Plugins for markdown writing
