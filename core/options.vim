@@ -163,6 +163,11 @@ augroup END
 set guicursor=n-v-c:block-Cursor/lCursor,i-ci-ve:ver25-Cursor2/lCursor2,r-cr:hor20,o:hor20
 
 set signcolumn=auto:2
+
+" Remove certain character from file name pattern matching
+set isfname-==
+set isfname-=:
+set isfname-=,
 "}
 
 let g:vimtex_compiler_progname='nvr'
