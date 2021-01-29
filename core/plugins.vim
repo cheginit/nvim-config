@@ -71,7 +71,7 @@ Plug 'haya14busa/vim-asterisk'
 if g:is_win
   Plug 'Yggdroot/LeaderF'
 else
-  Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+  Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 endif
 
 " Another similar plugin is command-t
@@ -516,6 +516,8 @@ xmap #  <Plug>(asterisk-z#)
 """""""""""""""""""""""""""""LeaderF settings"""""""""""""""""""""
 " Do not use cache file
 let g:Lf_UseCache = 0
+" Refresh each time we call leaderf
+let g:Lf_UseMemoryCache = 0
 
 " Ignore certain files and directories when searching files
 let g:Lf_WildIgnore = {
@@ -749,7 +751,7 @@ if g:is_mac
       \        'PUNCTUATION_PARAGRAPH_END', 'MULTIPLICATION_SIGN', 'PRP_CHECKOUT',
       \        'CAN_CHECKOUT', 'SOME_OF_THE', 'DOUBLE_PUNCTUATION', 'HELL',
       \        'CURRENCY', 'POSSESSIVE_APOSTROPHE', 'ENGLISH_WORD_REPEAT_RULE',
-      \        'NON_STANDARD_WORD', 'AU'],
+      \        'NON_STANDARD_WORD', 'AU', 'DATE_NEW_YEAR'],
       \ }
 endif
 
