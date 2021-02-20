@@ -705,6 +705,12 @@ let g:signify_vcs_list = [ 'git' ]
 
 " Change the sign for certain operations
 let g:signify_sign_change = '~'
+
+"""""""""""""""""""""""""vim-fugitive settings""""""""""""""""""""""""""""""
+nnoremap <silent> <leader>gc :Git commit<CR>
+nnoremap <silent> <leader>gs :Gstatus<CR>
+nnoremap <silent> <leader>gpl :Git pull<CR>
+nnoremap <silent> <leader>gpu :term git push
 "}}
 
 "{{ Markdown writing
@@ -738,9 +744,6 @@ nnoremap <silent> <M-S-m> :<C-U>MarkdownPreviewStop<CR>
 """"""""""""""""""""""""vim-grammarous settings""""""""""""""""""""""""""""""
 if g:is_mac
   let g:grammarous#languagetool_cmd = 'languagetool'
-  nmap <leader>x <Plug>(grammarous-close-info-window)
-  nmap <c-n> <Plug>(grammarous-move-to-next-error)
-  nmap <c-p> <Plug>(grammarous-move-to-previous-error)
   let g:grammarous#disabled_rules = {
       \ '*' : ['WHITESPACE_RULE', 'EN_QUOTES', 'ARROWS', 'SENTENCE_WHITESPACE',
       \        'WORD_CONTAINS_UNDERSCORE', 'COMMA_PARENTHESIS_WHITESPACE',
@@ -751,6 +754,13 @@ if g:is_mac
       \        'CURRENCY', 'POSSESSIVE_APOSTROPHE', 'ENGLISH_WORD_REPEAT_RULE',
       \        'NON_STANDARD_WORD', 'AU', 'DATE_NEW_YEAR'],
       \ }
+
+  augroup grammarous_map
+    autocmd!
+    autocmd FileType markdown nmap <buffer> <leader>x <Plug>(grammarous-close-info-window)
+    autocmd FileType markdown nmap <buffer> <c-n> <Plug>(grammarous-move-to-next-error)
+    autocmd FileType markdown nmap <buffer> <c-p> <Plug>(grammarous-move-to-previous-error)
+  augroup END
 endif
 
 """"""""""""""""""""""""unicode.vim settings""""""""""""""""""""""""""""""
@@ -769,9 +779,12 @@ omap s <Nop>
 
 "{{ LaTeX editting
 """"""""""""""""""""""""""""vimtex settings"""""""""""""""""""""""""""""
-if ( g:is_win || g:is_mac || g:is_linux ) && executable('latex')
   " Set up LaTeX flavor
   let g:tex_flavor = 'latex'
+  augroup vimtex_map
+    autocmd!
+    autocmd FileType tex nmap <buffer> <F9> <plug>(vimtex-compile)
+  augroup END
 
   " Deoplete configurations for autocompletion to work
   call deoplete#custom#var('omni', 'input_patterns', {
@@ -801,18 +814,23 @@ if ( g:is_win || g:is_mac || g:is_linux ) && executable('latex')
     let g:vimtex_view_general_options = '-reuse-instance -forward-search @tex @line @pdf'
   endif
 
-  " The following code is adapted from https://gist.github.com/skulumani/7ea00478c63193a832a6d3f2e661a536.
   if g:is_mac
     " let g:vimtex_view_method = "skim"
     let g:vimtex_view_general_viewer = '/Applications/Skim.app/Contents/SharedSupport/displayline'
     let g:vimtex_view_general_options = '-r @line @pdf @tex'
 
-    " This adds a callback hook that updates Skim after compilation
-    let g:vimtex_compiler_callback_hooks = ['UpdateSkim']
+    augroup vimtex_mac
+      autocmd!
+      autocmd User VimtexEventCompileSuccess call UpdateSkim()
+      autocmd FileType tex call SetServerName()
+    augroup END
 
-    function! UpdateSkim(status) abort
-      if !a:status | return | endif
+    function! SetServerName()
+      call system('echo ' . v:servername . ' > /tmp/curvimserver')
+    endfunction
 
+    " The following code is adapted from https://gist.github.com/skulumani/7ea00478c63193a832a6d3f2e661a536.
+    function! UpdateSkim() abort
       let l:out = b:vimtex.out()
       let l:src_file_path = expand('%:p')
       let l:cmd = [g:vimtex_view_general_viewer, '-r']
