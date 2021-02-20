@@ -780,68 +780,67 @@ omap s <Nop>
 "{{ LaTeX editting
 """"""""""""""""""""""""""""vimtex settings"""""""""""""""""""""""""""""
   " Set up LaTeX flavor
-  let g:tex_flavor = 'latex'
-  augroup vimtex_map
+let g:tex_flavor = 'latex'
+augroup vimtex_map
+  autocmd!
+  autocmd FileType tex nmap <buffer> <F9> <plug>(vimtex-compile)
+augroup END
+
+" Deoplete configurations for autocompletion to work
+call deoplete#custom#var('omni', 'input_patterns', {
+      \ 'tex': g:vimtex#re#deoplete
+      \ })
+
+let g:vimtex_compiler_latexmk = {
+      \ 'build_dir' : 'build',
+      \ }
+
+" TOC settings
+let g:vimtex_toc_config = {
+      \ 'name' : 'TOC',
+      \ 'layers' : ['content', 'todo', 'include'],
+      \ 'resize' : 1,
+      \ 'split_width' : 30,
+      \ 'todo_sorted' : 0,
+      \ 'show_help' : 1,
+      \ 'show_numbers' : 1,
+      \ 'mode' : 2,
+      \ }
+
+" Viewer settings for different platforms
+if g:is_win
+  let g:vimtex_view_general_viewer = 'SumatraPDF'
+  let g:vimtex_view_general_options_latexmk = '-reuse-instance'
+  let g:vimtex_view_general_options = '-reuse-instance -forward-search @tex @line @pdf'
+endif
+
+if g:is_mac
+  " let g:vimtex_view_method = "skim"
+  let g:vimtex_view_general_viewer = '/Applications/Skim.app/Contents/SharedSupport/displayline'
+  let g:vimtex_view_general_options = '-r @line @pdf @tex'
+
+  augroup vimtex_mac
     autocmd!
-    autocmd FileType tex nmap <buffer> <F9> <plug>(vimtex-compile)
+    autocmd User VimtexEventCompileSuccess call UpdateSkim()
+    autocmd FileType tex call SetServerName()
   augroup END
 
-  " Deoplete configurations for autocompletion to work
-  call deoplete#custom#var('omni', 'input_patterns', {
-        \ 'tex': g:vimtex#re#deoplete
-        \ })
+  function! SetServerName()
+    call system('echo ' . v:servername . ' > /tmp/curvimserver')
+  endfunction
 
-  let g:vimtex_compiler_latexmk = {
-        \ 'build_dir' : 'build',
-        \ }
+  " The following code is adapted from https://gist.github.com/skulumani/7ea00478c63193a832a6d3f2e661a536.
+  function! UpdateSkim() abort
+    let l:out = b:vimtex.out()
+    let l:src_file_path = expand('%:p')
+    let l:cmd = [g:vimtex_view_general_viewer, '-r']
 
-  " TOC settings
-  let g:vimtex_toc_config = {
-        \ 'name' : 'TOC',
-        \ 'layers' : ['content', 'todo', 'include'],
-        \ 'resize' : 1,
-        \ 'split_width' : 30,
-        \ 'todo_sorted' : 0,
-        \ 'show_help' : 1,
-        \ 'show_numbers' : 1,
-        \ 'mode' : 2,
-        \ }
+    if !empty(system('pgrep Skim'))
+      call extend(l:cmd, ['-g'])
+    endif
 
-  " Viewer settings for different platforms
-  if g:is_win
-    let g:vimtex_view_general_viewer = 'SumatraPDF'
-    let g:vimtex_view_general_options_latexmk = '-reuse-instance'
-    let g:vimtex_view_general_options = '-reuse-instance -forward-search @tex @line @pdf'
-  endif
-
-  if g:is_mac
-    " let g:vimtex_view_method = "skim"
-    let g:vimtex_view_general_viewer = '/Applications/Skim.app/Contents/SharedSupport/displayline'
-    let g:vimtex_view_general_options = '-r @line @pdf @tex'
-
-    augroup vimtex_mac
-      autocmd!
-      autocmd User VimtexEventCompileSuccess call UpdateSkim()
-      autocmd FileType tex call SetServerName()
-    augroup END
-
-    function! SetServerName()
-      call system('echo ' . v:servername . ' > /tmp/curvimserver')
-    endfunction
-
-    " The following code is adapted from https://gist.github.com/skulumani/7ea00478c63193a832a6d3f2e661a536.
-    function! UpdateSkim() abort
-      let l:out = b:vimtex.out()
-      let l:src_file_path = expand('%:p')
-      let l:cmd = [g:vimtex_view_general_viewer, '-r']
-
-      if !empty(system('pgrep Skim'))
-        call extend(l:cmd, ['-g'])
-      endif
-
-      call jobstart(l:cmd + [line('.'), l:out, l:src_file_path])
-    endfunction
-  endif
+    call jobstart(l:cmd + [line('.'), l:out, l:src_file_path])
+  endfunction
 endif
 "}}
 
