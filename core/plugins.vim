@@ -590,22 +590,14 @@ let g:vista_echo_cursor = 0
 " Stay in current window when vista window is opened
 let g:vista_stay_on_open = 0
 
-augroup matchup_conf
+augroup vista_conf
   autocmd!
   " Double mouse click to go to a tag
   autocmd FileType vista* nnoremap <buffer> <silent>
         \ <2-LeftMouse> :<C-U>call vista#cursor#FoldOrJump()<CR>
-  " Quit Neovim if vista window is the only window
-  autocmd BufEnter * call s:close_vista_win()
 augroup END
 
 nnoremap <silent> <Space>t :<C-U>Vista!!<CR>
-
-function! s:close_vista_win() abort
-  if winnr('$') == 1 && getbufvar(bufnr(), '&filetype') ==# 'vista'
-    quit
-  endif
-endfunction
 "}}
 
 "{{ File editting
@@ -814,14 +806,19 @@ if g:is_win
   let g:vimtex_view_general_options = '-reuse-instance -forward-search @tex @line @pdf'
 endif
 
-if g:is_mac
-  " let g:vimtex_view_method = "skim"
-  let g:vimtex_view_general_viewer = '/Applications/Skim.app/Contents/SharedSupport/displayline'
-  let g:vimtex_view_general_options = '-r @line @pdf @tex'
+if ( g:is_win || g:is_mac ) && executable('latex')
+  function! SetServerName() abort
+    if has('win32')
+      let nvim_server_file = $TEMP . '/curnvimserver.txt'
+    else
+      let nvim_server_file = '/tmp/curnvimserver.txt'
+    endif
+    let cmd = printf('echo %s > %s', v:servername, nvim_server_file)
+    call system(cmd)
+  endfunction
 
-  augroup vimtex_mac
+  augroup vimtex_common
     autocmd!
-    autocmd User VimtexEventCompileSuccess call UpdateSkim()
     autocmd FileType tex call SetServerName()
   augroup END
 
@@ -834,13 +831,36 @@ if g:is_mac
     let l:out = b:vimtex.out()
     let l:src_file_path = expand('%:p')
     let l:cmd = [g:vimtex_view_general_viewer, '-r']
-
     if !empty(system('pgrep Skim'))
       call extend(l:cmd, ['-g'])
     endif
 
     call jobstart(l:cmd + [line('.'), l:out, l:src_file_path])
   endfunction
+
+  if g:is_mac
+    " let g:vimtex_view_method = "skim"
+    let g:vimtex_view_general_viewer = '/Applications/Skim.app/Contents/SharedSupport/displayline'
+    let g:vimtex_view_general_options = '-r @line @pdf @tex'
+
+    augroup vimtex_mac
+      autocmd!
+      autocmd User VimtexEventCompileSuccess call UpdateSkim()
+    augroup END
+
+    " The following code is adapted from https://gist.github.com/skulumani/7ea00478c63193a832a6d3f2e661a536.
+    function! UpdateSkim() abort
+      let l:out = b:vimtex.out()
+      let l:src_file_path = expand('%:p')
+      let l:cmd = [g:vimtex_view_general_viewer, '-r']
+
+      if !empty(system('pgrep Skim'))
+        call extend(l:cmd, ['-g'])
+      endif
+
+      call jobstart(l:cmd + [line('.'), l:out, l:src_file_path])
+    endfunction
+  endif
 endif
 "}}
 
