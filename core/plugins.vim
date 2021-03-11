@@ -2,9 +2,14 @@ scriptencoding utf-8
 "{ Plugin installation
 "{{ Vim-plug related settings.
 " The root directory to install all plugins.
-let g:plugin_home=expand(stdpath('data') . '/plugged')
+let g:plug_home=expand(stdpath('data') . '/plugged')
 
-if empty(readdir(g:plugin_home))
+" Use fastgit for clone on Linux systems.
+if g:is_linux
+  let g:plug_url_format = 'https://hub.fastgit.org/%s.git'
+endif
+
+if empty(readdir(g:plug_home))
   augroup plug_init
     autocmd!
     autocmd VimEnter * PlugInstall --sync | quit |source $MYVIMRC
@@ -13,7 +18,7 @@ endif
 "}}
 
 "{{ Autocompletion related plugins
-call plug#begin(g:plugin_home)
+call plug#begin()
 " Auto-completion
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 " Language Server Protocol client
@@ -45,8 +50,10 @@ Plug 'jeetsukumaran/vim-pythonsense'
 Plug 'machakann/vim-swap'
 
 " IDE for Lisp
-" Plug 'kovisoft/slimv'
-Plug 'vlime/vlime', {'rtp': 'vim/', 'for': 'lisp'}
+if executable('sbcl')
+  " Plug 'kovisoft/slimv'
+  Plug 'vlime/vlime', {'rtp': 'vim/', 'for': 'lisp'}
+endif
 
 " C++ semantic highlighting
 if executable('ccls')
@@ -97,7 +104,6 @@ Plug 'lifepillar/vim-solarized8'
 Plug 'joshdick/onedark.vim'
 Plug 'KeitaNakamura/neodark.vim'
 Plug 'sainnhe/edge'
-Plug 'ghifarit53/tokyonight-vim'
 Plug 'sainnhe/sonokai'
 Plug 'sainnhe/gruvbox-material'
 
@@ -170,6 +176,12 @@ Plug 'tpope/vim-repeat'
 " Show the content of register in preview window
 " Plug 'junegunn/vim-peekaboo'
 Plug 'jdhao/better-escape.vim'
+
+if g:is_mac
+  Plug 'lyokha/vim-xkbswitch'
+elseif g:is_win
+  Plug 'Neur1n/neuims'
+endif
 "}}
 
 "{{ Linting, formating
@@ -480,7 +492,7 @@ let g:semshi#mark_selected_nodes=0
 let g:semshi#error_sign=v:false
 
 """""""""""""""""""""""""" vlime settings """"""""""""""""""""""""""""""""
-command! -nargs=0 StartVlime call jobstart(printf("sbcl --load %s/vlime/lisp/start-vlime.lisp", g:plugin_home))
+command! -nargs=0 StartVlime call jobstart(printf("sbcl --load %s/vlime/lisp/start-vlime.lisp", g:plug_home))
 
 "}}
 
@@ -656,6 +668,9 @@ endif
 """"""""""""""""""""""""""""nvim-minipyank settings"""""""""""""""""""""""""
 nmap p <Plug>(miniyank-autoput)
 nmap P <Plug>(miniyank-autoPut)
+
+""""""""""""""""""""""""""""vim-xkbswitch settings"""""""""""""""""""""""""
+let g:XkbSwitchEnabled = 1
 "}}
 
 "{{ Linting and formating
@@ -921,6 +936,12 @@ let g:airline#extensions#hunks#non_zero_only = 1
 
 " Speed up airline
 let g:airline_highlighting_cache = 1
+
+" The key in the following shortcode are the layout when we use a specific
+" input method mode. On my macOS, 0 means that we are trying to input Chinese,
+" and 1 means we are using English mode.
+" See also https://github.com/vim-airline/vim-airline/blob/master/autoload/airline/extensions/xkblayout.vim#L11
+let g:airline#extensions#xkblayout#short_codes = {'0': 'CN', '1': 'US'}
 
 """"""""""""""""""""""""""""vim-startify settings""""""""""""""""""""""""""""
 " Do not change working directory when opening files.
