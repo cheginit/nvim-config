@@ -26,7 +26,6 @@ Plug 'prabirshrestha/vim-lsp'
 Plug 'lighttiger2505/deoplete-vim-lsp'
 
 Plug 'neovim/nvim-lspconfig'
-Plug 'aca/pylance.nvim', { 'do': './install.sh' }
 
 " fzf
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
