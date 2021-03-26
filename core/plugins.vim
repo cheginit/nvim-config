@@ -204,7 +204,6 @@ Plug 'mhinz/vim-signify'
 
 " Git command inside vim
 Plug 'tpope/vim-fugitive'
-Plug 'APZelos/blamer.nvim'
 "}}
 
 "{{ Plugins for markdown writing
@@ -409,6 +408,8 @@ if executable('pyls')
           \                     'pyflakes': {'enabled': v:false},
           \                     'pycodestyle': {'enabled': v:false},
           \                     'jedi_completion': {'fuzzy': v:true},
+          \                     'pyls_isort': {'enabled': v:true},
+          \                     'pyls_mypy': {'enabled': v:true}
           \                    }
           \        }
           \ }})
@@ -541,7 +542,8 @@ let g:Lf_WildIgnore = {
   \ 'file': ['*.exe', '*.dll', '*.so', '*.o', '*.pyc', '*.jpg', '*.png',
   \ '*.gif', '*.svg', '*.ico', '*.db', '*.tgz', '*.tar.gz', '*.gz',
   \ '*.zip', '*.bin', '*.pptx', '*.xlsx', '*.docx', '*.pdf', '*.tmp',
-  \ '*.wmv', '*.mkv', '*.mp4', '*.rmvb', '*.ttf', '*.ttc', '*.otf']
+  \ '*.wmv', '*.mkv', '*.mp4', '*.rmvb', '*.ttf', '*.ttc', '*.otf',
+  \ '*.mp3', '*.aac']
   \}
 
 " Do not show fancy icons for Linux server.
@@ -679,6 +681,7 @@ let g:XkbSwitchEnabled = 1
 " linters for different filetypes
 let g:ale_linters = {
   \ 'vim': ['vint'],
+  \ 'cpp': ['cppcheck'],
   \ }
 
 " Only run linters in the g:ale_linters dictionary
