@@ -83,6 +83,7 @@ else
   Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 endif
 
+Plug 'ctrlpvim/ctrlp.vim'
 " Another similar plugin is command-t
 " Plug 'wincent/command-t'
 
